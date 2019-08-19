@@ -15,9 +15,9 @@
               <label>Email</label>
             </div>
             <div>
-              <input v-bind="URL" type="text" name="URL" :placeholder="URL" />
-              <input v-bind="applyName" type="text" name="name" id />
-              <input v-bind="applyEmail" type="text" name="email" id />
+              <input v-model.lazy="URL" type="text" name="URL" :placeholder="URL" />
+              <input v-model.lazy="name" type="text" name="name" id />
+              <input v-model.lazy="email" type="text" name="email" id />
             </div>
           </div>
           <button>Submit</button>
@@ -28,33 +28,37 @@
     <div>
       <h1>Applied Form</h1>
       <p>{{URL}}</p>
-      <p>{{applyName}}</p>
-      <p>{{applyEmail}}</p>
+      <p>{{getToken}}</p>
+      <p>{{name}}</p>
+      <p>{{email}}</p>
     </div>
     <hr />
     <div>
       <h1>Response</h1>
-      <p>
-      </p>
+      <p></p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 import URL from "../constants/Url";
+import { constants } from "crypto";
 export default {
   data() {
     return {
       URL,
-      applyName: "",
-      applyEmail: ""
+      name: "",
+      email: ""
     };
   },
   computed: {
-    getToken: function(URL) {
-      let token = axios.get(url);
-      console.log(token);
+    getToken: async function(URL) {
+      let token = await axios.get(`${URL}/api/v1/key`).then(res => {
+        console.log(res);
+        return res;
+      });
+      return token;
     }
   }
 };
