@@ -23,6 +23,7 @@
           <button>Submit</button>
         </fieldset>
       </form>
+      <button @click="Apply">Show Applies</button>
     </div>
     <hr />
     <div>
@@ -53,12 +54,32 @@ export default {
     };
   },
   computed: {
+    handleResponse: res => {
+      return res.data;
+    },
+    handleError: err => {
+      console.log(err);
+    },
+
     getToken: async function(URL) {
-      let token = await axios.get(`${URL}/api/v1/key`).then(res => {
-        console.log(res);
-        return res;
+      // two ways to handle promises you got to play them really well here
+      let token1 = new Promise(this.handleResponse, this.handleError);
+      console.log(token1);
+      let token = axios.get("https://interns.bcgdvsydney.com/api/v1/key");
+      //   let token = axios.get(`${URL}/api/v1/key`);
+      let result = await token.then(res => {
+        // console.log(res.data.key);
+        return res.data.key;
       });
-      return token;
+      let final = await result;
+      //   console.log(final)
+      return final;
+      //   you need to resolve this maybe a new function??
+    }
+  },
+  methods: {
+    Apply: function() {
+      console.log(this.getToken);
     }
   }
 };
